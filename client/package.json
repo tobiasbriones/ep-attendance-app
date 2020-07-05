@@ -1,0 +1,23 @@
+{
+  "name": "example.programming.web.attendance-app",
+  "version": "1.0.0",
+  "description": "Example project for a simple attendance app",
+  "private": true,
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TobiasBriones/example.programming.web.attendance-app.git"
+  },
+  "keywords": [
+    "example-project",
+    "web-app",
+    "php",
+    "student-attendance"
+  ],
+  "author": "Tobias Briones <tobiasbriones.dev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TobiasBriones/example.programming.web.attendance-app/issues"
+  },
+  "homepage": "https://github.com/TobiasBriones/example.programming.web.attendance-app#readme"
+}
