@@ -42,6 +42,8 @@
   }
   
   h1 {
+    font-size: 32px;
+    font-weight: bold;
     top: 48px;
   }
 </style>

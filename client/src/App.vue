@@ -17,7 +17,7 @@
   export default {
     name: 'App',
     components: {
-      'app-toolbar': Toolbar
+      'app-toolbar': Toolbar,
     }
   };
 </script>

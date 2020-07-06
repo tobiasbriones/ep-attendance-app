@@ -5,11 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from 'vue';
+import App from './App.vue';
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.config.productionTip = false
+// Install BootstrapVue
+Vue.use(BootstrapVue);
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin);
+
+Vue.config.productionTip = false;
+
+new Vue(
+  {
+    render: h => h(App)
+  }
+).$mount('#app');
