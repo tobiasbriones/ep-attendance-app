@@ -12,6 +12,7 @@ use App\Api\V1\ApiTools\End;
 use App\Api\V1\Instructors\InstructorsController;
 use App\Model\Instructor;
 
+
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 header("Access-Control-Allow-Methods: GET, POST, HEAD");
 header("Access-Control-Allow-Origin: *");
@@ -24,6 +25,13 @@ $accepted_methods = ["GET", "POST", "HEAD"];
 check_request_method($accepted_methods, $request_method);
 check_input();
 process();
+
+/*
+ * Use this line of code to generate your instructor hashed password
+ * echo password_hash("password", PASSWORD_BCRYPT);
+ */
+
+// ------------------------------  FUNCTIONS  ------------------------------- //
 
 function check_request_method($accepted_methods, $request_method) {
     if (!in_array($request_method, $accepted_methods)) {

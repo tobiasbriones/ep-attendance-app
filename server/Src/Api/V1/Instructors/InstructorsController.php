@@ -13,11 +13,13 @@ use App\Model\Instructor;
 use Exception;
 use Firebase\JWT\JWT;
 
+// For this app there's only one instructor with email and password hash
+// registered in the .env file
 class InstructorsController {
     
     public static function login(Instructor $instructor, string $password, callable $success, callable $error) {
         $INSTRUCTOR_EMAIL = Env::get(Env::INSTRUCTOR_EMAIL_KEY);
-        $INSTRUCTOR_PASSWORD = Env::get(Env::INSTRUCTOR_PASSWORD_KEY);
+        $INSTRUCTOR_PASSWORD_HASH = Env::get(Env::INSTRUCTOR_PASSWORD_HASH_KEY);
         $jwtPayload = [
             "iss" => "",
             "aud" => "",
@@ -28,7 +30,7 @@ class InstructorsController {
             ]
         ];
         
-        if ($INSTRUCTOR_EMAIL != $instructor->getEmail() || $INSTRUCTOR_PASSWORD != $password) {
+        if ($INSTRUCTOR_EMAIL != $instructor->getEmail() || !password_verify($password, $INSTRUCTOR_PASSWORD_HASH)) {
             $resultCode = ResultCode::FAIL_INVALID_LOGIN_CREDENTIALS;
             
             $error(ResultCode::getMessage($resultCode));

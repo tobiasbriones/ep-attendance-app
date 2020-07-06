@@ -14,7 +14,7 @@ class Env {
     
     public const JWT_KEY = "JWT_KEY";
     public const INSTRUCTOR_EMAIL_KEY = "INSTRUCTOR_EMAIL";
-    public const INSTRUCTOR_PASSWORD_KEY = "INSTRUCTOR_PASSWORD";
+    public const INSTRUCTOR_PASSWORD_HASH_KEY = "INSTRUCTOR_PASSWORD_HASH";
     private static bool $isLoaded = false;
     
     public static function get($key): string {
