@@ -7,7 +7,7 @@
 
 <template>
   <div id="app">
-    <app-toolbar msg="Welcome to Your Vue.js App" />
+    <app-toolbar></app-toolbar>
   </div>
 </template>
 
@@ -17,7 +17,7 @@
   export default {
     name: 'App',
     components: {
-      'app-toolbar': Toolbar,
+      'app-toolbar': Toolbar
     }
   };
 </script>
@@ -30,5 +30,13 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
     color: rgba(0, 0, 0, 0.89);
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  #app {
+    min-width: 360px;
   }
 </style>

@@ -10,40 +10,113 @@
     <nav>
       <div>
         <h1>Attendance App</h1>
+        <div class="actions">
+          <ul>
+            <li v-on:click="onAccessActionClick">
+              <span>
+                {{ access }}
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
+    <app-login-modal></app-login-modal>
+    <b-button ref="loginModalButton" class="gone" v-b-modal.modal-1></b-button>
   </header>
 </template>
 
 <script>
+  
+  import LoginModal from './LoginModal';
+  
   export default {
     name: 'Toolbar',
-    props: {
-      msg: String
+    data: function() {
+      return {
+        access: 'Access'
+      };
+    },
+    methods: {
+      onAccessActionClick: function() {
+        this.$refs.loginModalButton.click();
+      }
+    },
+    components: {
+      'app-login-modal': LoginModal
     }
   };
 </script>
 
 <style scoped>
+  ul {
+    list-style: none;
+  }
+  
   nav {
-    height: 128px;
+    height: 96px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     background-color: #FBC02D;
   }
   
   nav > div {
+    height: 100%;
+    padding: 16px 32px;
+  }
+  
+  nav > div > .actions {
+    display: inline-block;
+    height: 100%;
+    float: right;
+  }
+  
+  nav > div > .actions > ul,
+  nav > div > .actions > ul > li {
+    height: 100%;
+  }
+  
+  nav > div > .actions > ul > li {
     display: flex;
-    align-items: center;
+    align-content: center;
     justify-content: center;
   }
   
-  nav h1 {
+  nav > div > .actions > ul > li > span {
+    display: block;
+    min-width: 76px;
+    height: 80%;
+    padding: 12px;
     align-self: center;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 32px;
+    border: 1px solid #F57F17;
+    background-color: #66BB6A;
+    transition: background-color 200ms;
+    cursor: pointer;
+  }
+  
+  nav > div > .actions > ul > li > span:active {
+    background-color: #4CAF50;
   }
   
   h1 {
-    font-size: 32px;
+    display: inline-block;
+    font-size: 24px;
     font-weight: bold;
-    top: 48px;
+    top: 16px;
+  }
+  
+  @media (min-width: 960px) {
+    h1 {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 32px;
+    }
+    
+    nav > div > .actions > ul > li > span {
+      min-width: 108px;
+      font-size: 18px;
+    }
   }
 </style>
