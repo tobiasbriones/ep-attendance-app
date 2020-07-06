@@ -10,23 +10,57 @@ namespace App\Api\V1\Instructors;
 
 use App\Config\Env;
 use App\Model\Instructor;
+use Exception;
+use Firebase\JWT\JWT;
 
 class InstructorsController {
     
     public static function login(Instructor $instructor, string $password, callable $success, callable $error) {
         $INSTRUCTOR_EMAIL = Env::get(Env::INSTRUCTOR_EMAIL_KEY);
         $INSTRUCTOR_PASSWORD = Env::get(Env::INSTRUCTOR_PASSWORD_KEY);
+        $jwtPayload = [
+            "iss" => "",
+            "aud" => "",
+            "iat" => "",
+            "nbf" => "",
+            "data" => [
+                "email" => $instructor->getEmail()
+            ]
+        ];
         
         if ($INSTRUCTOR_EMAIL != $instructor->getEmail() || $INSTRUCTOR_PASSWORD != $password) {
-            $resultCode = ResultCode::FAIL_INVALID_LOGIN;
+            $resultCode = ResultCode::FAIL_INVALID_LOGIN_CREDENTIALS;
             
             $error(ResultCode::getMessage($resultCode));
             return;
         }
         $success(
-            ResultCode::getMessage(ResultCode::RESPONSE_OK),
+            ResultCode::getMessage(ResultCode::RESULT_OK),
             $instructor,
-            ""
+            JWT::encode($jwtPayload, Env::get(Env::JWT_KEY))
+        );
+    }
+    
+    public static function authenticateJWT(string $jwt, callable $success, callable $error) {
+        $accessDenied = function () use ($error) {
+            $resultCode = ResultCode::FAIL_INVALID_AUTH_JWT;
+            
+            $error(ResultCode::getMessage($resultCode));
+        };
+        $instructor = null;
+        
+        try {
+            $decodedJWT = JWT::decode($jwt, Env::get(Env::JWT_KEY), ["HS256"]);
+            $instructor = new Instructor($decodedJWT->data->email);
+        }
+        catch (Exception $e) {
+            $accessDenied();
+            return;
+        }
+        
+        $success(
+            ResultCode::getMessage(ResultCode::RESULT_OK),
+            $instructor
         );
     }
     

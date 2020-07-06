@@ -10,11 +10,13 @@ namespace App\Api\V1\Instructors;
 
 class ResultCode {
     
-    public const RESPONSE_OK = 0;
-    public const FAIL_INVALID_LOGIN = -1;
+    public const RESULT_OK = 0;
+    public const FAIL_INVALID_LOGIN_CREDENTIALS = -1;
+    public const FAIL_INVALID_AUTH_JWT = -2;
     private const MSG = [
         "Instructors request handled successfully",
-        "Invalid instructor email or password"
+        "Invalid instructor email or password",
+        "Invalid login credentials"
     ];
     
     private static function getMsgIndex(int $responseCode): int {
@@ -22,7 +24,7 @@ class ResultCode {
     }
     
     public static function getMessage(int $responseCode): string {
-        if ($responseCode < -1 || $responseCode > 0) {
+        if ($responseCode < -2 || $responseCode > 0) {
             return "N/A";
         }
         $index = self::getMsgIndex($responseCode);

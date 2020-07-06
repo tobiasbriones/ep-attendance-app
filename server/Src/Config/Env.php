@@ -12,6 +12,7 @@ use Dotenv\Dotenv;
 
 class Env {
     
+    public const JWT_KEY = "JWT_KEY";
     public const INSTRUCTOR_EMAIL_KEY = "INSTRUCTOR_EMAIL";
     public const INSTRUCTOR_PASSWORD_KEY = "INSTRUCTOR_PASSWORD";
     private static bool $isLoaded = false;

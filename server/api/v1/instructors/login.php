@@ -34,15 +34,19 @@ function check_request_method($accepted_methods, $request_method) {
 }
 
 function check_input() {
+    $wrong = function () {
+        $msg = "Wrong arguments or number of arguments. Check the API documentation";
+        
+        End::error($msg, 400);
+        exit;
+    };
     $params_set = true;
     $params_set &= isset($_POST["email"]);
     $params_set &= isset($_POST["password"]);
     
     if (!$params_set) {
-        $msg = "Wrong arguments or number of arguments. Check the API documentation";
-        
-        End::error($msg, 400);
-        exit;
+        $wrong();
+        return false;
     }
     return true;
 }
@@ -60,4 +64,33 @@ function process() {
     $error = fn ($errorMessage) => End::error($errorMessage, 401);
     
     InstructorsController::login($instructor, $password, $success, $error);
+}
+
+// Authentication functionality
+function check_auth_input() {
+    $wrong = function () {
+        $msg = "Wrong arguments or number of arguments. Check the API documentation";
+        
+        End::error($msg, 400);
+        exit;
+    };
+    
+    if (!isset($_POST["jwt"])) {
+        $wrong();
+        return false;
+    }
+    return true;
+}
+
+function accessWithJWT() {
+    $jwt = $_POST["jwt"];
+    $success = fn (string $message, Instructor $instructor) => End::send(
+        [
+            "Message" => $message,
+            "Instructor" => json_encode($instructor),
+        ]
+    );
+    $error = fn ($errorMessage) => End::error($errorMessage, 401);
+    
+    InstructorsController::authenticateJWT($jwt, $success, $error);
 }
