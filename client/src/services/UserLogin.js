@@ -5,12 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { getCookie } from '../tools/Cookies';
+import { getCookie, setCookie } from '../tools/Cookies';
 
 const USER_TYPE_CNAME = 'user-type';
 
 export default {
+  setUserType(userType, expDays) {
+    setCookie(USER_TYPE_CNAME, userType, expDays);
+  },
   getUserType() {
     return getCookie(USER_TYPE_CNAME);
   }
-}
+};

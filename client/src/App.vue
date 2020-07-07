@@ -7,15 +7,68 @@
 
 <template>
   <div id="app">
-    <app-toolbar></app-toolbar>
+    <app-toolbar v-bind:user-logged="userLogged"></app-toolbar>
+    <div>
+      {{ instructorEmail }}
+    </div>
   </div>
 </template>
 
 <script>
   import Toolbar from './components/Toolbar';
   
+  import AuthService from './instructor/services/AuthService';
+  import UserLogin from './services/UserLogin';
+  import LoginService from './instructor/services/LoginService';
+  
   export default {
     name: 'App',
+    data() {
+      return {
+        userLogged: false,
+        instructorEmail: 'A'
+      };
+    },
+    created() {
+      this.checkUserLogin();
+    },
+    methods: {
+      async authenticateInstructor(jwt) {
+        try {
+          const response = await AuthService.authenticate(jwt);
+          const responseData = response.data;
+          const instructor = responseData['instructor'];
+          
+          this.userLogged = true;
+          this.instructorEmail = instructor['email'];
+        }
+        catch (err) {
+          alert(err.response.data.message);
+        }
+      },
+      
+      checkUserLogin() {
+        const userType = UserLogin.getUserType();
+        const instructor = () => {
+          const jwt = LoginService.loadInstructorJWT();
+          this.authenticateInstructor(jwt);
+        };
+        const student = () => {
+        
+        };
+        
+        if (!userType) return;
+        switch (userType) {
+          case 'instructor':
+            instructor();
+            break;
+          
+          case 'student':
+            student();
+            break;
+        }
+      }
+    },
     components: {
       'app-toolbar': Toolbar
     }

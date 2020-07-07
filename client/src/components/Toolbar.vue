@@ -12,9 +12,14 @@
         <h1>Attendance App</h1>
         <div class="actions">
           <ul>
-            <li v-on:click="onAccessActionClick">
+            <li v-on:click="onAccessActionClick" v-if="!userLogged">
               <span>
                 {{ access }}
+              </span>
+            </li>
+            <li v-on:click="onLogoutActionClick" v-if="userLogged">
+              <span>
+                {{ logout }}
               </span>
             </li>
           </ul>
@@ -32,14 +37,21 @@
   
   export default {
     name: 'Toolbar',
+    props: {
+      userLogged: Boolean,
+    },
     data: function() {
       return {
-        access: 'Access'
+        access: 'Access',
+        logout: 'Logout'
       };
     },
     methods: {
       onAccessActionClick: function() {
         this.$refs.loginModalButton.click();
+      },
+      onLogoutActionClick: function() {
+        // TODO
       }
     },
     components: {

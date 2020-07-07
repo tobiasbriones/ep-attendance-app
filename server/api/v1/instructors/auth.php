@@ -26,11 +26,6 @@ check_request_method($accepted_methods, $request_method);
 check_input();
 process();
 
-/*
- * Use this line of code to generate your instructor hashed password
- * echo password_hash("password", PASSWORD_BCRYPT);
- */
-
 // ------------------------------  FUNCTIONS  ------------------------------- //
 
 function cors($request_method) {
@@ -54,11 +49,8 @@ function check_input() {
         End::error($msg, 400);
         exit;
     };
-    $params_set = true;
-    $params_set &= isset($_POST["email"]);
-    $params_set &= isset($_POST["password"]);
     
-    if (!$params_set) {
+    if (!isset($_POST["jwt"])) {
         $wrong();
         return false;
     }
@@ -66,16 +58,14 @@ function check_input() {
 }
 
 function process() {
-    $instructor = new Instructor($_POST["email"]);
-    $password = $_POST["password"];
-    $success = fn (string $message, Instructor $instructor, string $jwt) => End::send(
+    $jwt = $_POST["jwt"];
+    $success = fn (string $message, Instructor $instructor) => End::send(
         [
             "message" => $message,
             "instructor" => $instructor,
-            "jwt" => $jwt
         ]
     );
     $error = fn ($errorMessage) => End::error($errorMessage, 401);
     
-    InstructorsController::login($instructor, $password, $success, $error);
+    InstructorsController::authenticateJWT($jwt, $success, $error);
 }

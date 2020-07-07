@@ -7,7 +7,8 @@
 
 import Api from '../../services/Api';
 
-const endPoint = 'instructors/login.php';
+const loginEndPoint = 'instructors/login.php';
+const authEndPoint = 'instructors/auth.php';
 const headers = {
   'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 };
@@ -16,6 +17,13 @@ export default {
   login(data) {
     const config = { headers: headers };
     
-    return Api.post(endPoint, data, config);
+    return Api.post(loginEndPoint, data, config);
+  },
+  authenticate(jwt) {
+    const config = { headers: headers };
+    const data = new FormData();
+    
+    data.set('jwt', jwt);
+    return Api.post(authEndPoint, data, config);
   }
 };
