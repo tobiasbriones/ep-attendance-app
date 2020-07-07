@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Api from '../../services/Api';
+import Api from '../../../services/Api';
 
 const loginEndPoint = 'instructors/login.php';
 const authEndPoint = 'instructors/auth.php';

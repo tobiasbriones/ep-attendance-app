@@ -11,18 +11,15 @@
                  @onLogoutAction="onLogout"
                  @onSuccessfullyLogged="onSuccessfullyLogged">
     </app-toolbar>
-    <div>
-      {{ instructorEmail }}
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
   import Toolbar from './components/Toolbar';
-  
-  import AuthService from './instructor/services/AuthService';
+  import AuthService from './user/instructor/services/AuthService';
   import UserLogin from './services/UserLogin';
-  import LoginService from './instructor/services/LoginService';
+  import LoginService from './user/instructor/services/LoginService';
   
   export default {
     name: 'App',

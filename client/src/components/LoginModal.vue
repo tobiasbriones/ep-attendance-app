@@ -17,13 +17,15 @@
         </button>
       </div>
       
-      <b-form @submit="onSubmit" @reset="onReset" v-if="showInstructorForm">
+      <b-form @submit="onInstructorSubmit"
+              @reset="onInstructorReset"
+              v-if="showInstructorForm">
         <p class="form-title">{{ instructorLoginTitle }}</p>
         <b-form-group id="input-group-1"
                       label="Email address:"
                       label-for="input-1">
           <b-form-input id="input-1"
-                        v-model="form.email"
+                        v-model="form.instructor.email"
                         type="email"
                         required
                         placeholder="Enter email">
@@ -35,7 +37,7 @@
                       label-for="input-2">
           <b-form-input id="input-2"
                         type="password"
-                        v-model="form.password"
+                        v-model="form.instructor.password"
                         required
                         placeholder="Enter password">
           </b-form-input>
@@ -44,13 +46,47 @@
         <b-button type="submit" variant="primary" class="loginBtn">Login</b-button>
         <b-button type="reset" variant="danger" class="resetBtn">Reset</b-button>
       </b-form>
+      
+      <b-form @submit="onStudentSubmit" @reset="onStudentReset" v-if="showStudentForm">
+        <p class="form-title">{{ studentLoginTitle }}</p>
+        <b-form-group id="input-group-3"
+                      label="Email address:"
+                      label-for="input-3">
+          <b-form-input id="input-1"
+                        v-model="form.student.email"
+                        type="email"
+                        required
+                        placeholder="Enter email">
+          </b-form-input>
+        </b-form-group>
+        
+        <b-form-group id="input-group-4"
+                      label="Password:"
+                      label-for="input-4">
+          <b-form-input id="input-2"
+                        type="password"
+                        v-model="form.student.password"
+                        required
+                        placeholder="Enter password">
+          </b-form-input>
+        </b-form-group>
+        
+        <div class="register">
+          <router-link to="/student/register"
+                       @click.native="onSignInClick">
+            {{ registerMsg }}
+          </router-link>
+        </div>
+        <b-button type="submit" variant="primary" class="loginBtn">Login</b-button>
+        <b-button type="reset" variant="danger" class="resetBtn">Reset</b-button>
+      </b-form>
     </b-modal>
   </div>
 </template>
 
 <script>
-  import AuthService from '../instructor/services/AuthService';
-  import LoginService from '../instructor/services/LoginService';
+  import AuthService from '../user/instructor/services/AuthService';
+  import LoginService from '../user/instructor/services/LoginService';
   
   export default {
     data() {
@@ -58,9 +94,17 @@
         showInstructorForm: false,
         showStudentForm: false,
         instructorLoginTitle: 'Instructor login',
+        studentLoginTitle: 'Student login',
+        registerMsg: `Don't have an account? Sign In`,
         form: {
-          email: 'tobiasbriones.dev@gmail.com',
-          password: 'password'
+          instructor: {
+            email: 'tobiasbriones.dev@gmail.com',
+            password: 'password'
+          },
+          student: {
+            email: 'tobiasbriones.dev@gmail.com',
+            password: 'password'
+          }
         }
       };
     },
@@ -73,17 +117,17 @@
         this.showInstructorForm = false;
         this.showStudentForm = true;
       },
-      async onSubmit(e) {
+      async onInstructorSubmit(e) {
         e.preventDefault();
         const formData = new FormData();
         
-        formData.set('email', this.form.email);
-        formData.set('password', this.form.password);
+        formData.set('email', this.form.instructor.email);
+        formData.set('password', this.form.instructor.password);
         try {
           const response = await AuthService.login(formData);
           const responseData = response.data;
           const jwt = responseData['jwt'];
-  
+          
           LoginService.saveInstructorLogin(jwt);
           this.$root.$emit('bv::hide::modal', 'modal-login');
           this.$emit('onSuccessfullyLogged');
@@ -92,10 +136,36 @@
           alert(err.response.data.message);
         }
       },
-      onReset(e) {
+      onInstructorReset(e) {
         e.preventDefault();
-        this.form.email = '';
-        this.form.password = '';
+        this.form.instructor.email = '';
+        this.form.instructor.password = '';
+      },
+      async onStudentSubmit(e) {
+        e.preventDefault();
+        const formData = new FormData();
+        
+        formData.set('email', this.form.student.email);
+        formData.set('password', this.form.student.password);
+        try {
+          await this.$store.dispatch('login', {
+            email: this.form.student.email,
+            password: this.form.student.password,
+          });
+          
+          this.$emit('onSuccessfullyLogged');
+        }
+        catch (err) {
+          alert(err);
+        }
+      },
+      onStudentReset(e) {
+        e.preventDefault();
+        this.form.student.email = '';
+        this.form.student.password = '';
+      },
+      onSignInClick() {
+        this.$root.$emit('bv::hide::modal', 'modal-login');
       }
     }
   };
@@ -128,5 +198,9 @@
   .resetBtn {
     width: 30%;
     float: right;
+  }
+  
+  .register {
+    margin-bottom: 16px;
   }
 </style>

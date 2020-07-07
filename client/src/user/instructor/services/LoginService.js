@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { getCookie, setCookie } from '../../tools/Cookies';
-import UserLogin from '../../services/UserLogin';
+import { getCookie, setCookie } from '../../../tools/Cookies';
+import UserLogin from '../../../services/UserLogin';
 
 const INSTRUCTOR_USER_TYPE = 'instructor';
 const INSTRUCTOR_JWT_CNAME = 'instructor-jwt';

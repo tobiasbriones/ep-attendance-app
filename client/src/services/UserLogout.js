@@ -7,7 +7,7 @@
 
 import { setCookie } from '../tools/Cookies';
 import UserLogin from './UserLogin';
-import LogoutService from '../instructor/services/LogoutService';
+import LogoutService from '../user/instructor/services/LogoutService';
 
 export default {
   logout() {
