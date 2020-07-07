@@ -12,16 +12,16 @@ use App\Api\V1\ApiTools\End;
 use App\Api\V1\Instructors\InstructorsController;
 use App\Model\Instructor;
 
-
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-header("Access-Control-Allow-Methods: GET, POST, HEAD");
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, HEAD, OPTIONS");
+header("Access-Control-Allow-Origin: http://localhost:8080");
 header("Access-Control-Max-Age: 600");
 header("Content-Type: application/json; charset=UTF-8");
 
 $request_method = $_SERVER["REQUEST_METHOD"];
-$accepted_methods = ["GET", "POST", "HEAD"];
+$accepted_methods = ["POST"];
 
+cors($request_method);
 check_request_method($accepted_methods, $request_method);
 check_input();
 process();
@@ -32,6 +32,12 @@ process();
  */
 
 // ------------------------------  FUNCTIONS  ------------------------------- //
+
+function cors($request_method) {
+    if ($request_method === "OPTIONS"){
+        exit;
+    }
+}
 
 function check_request_method($accepted_methods, $request_method) {
     if (!in_array($request_method, $accepted_methods)) {
@@ -64,9 +70,9 @@ function process() {
     $password = $_POST["password"];
     $success = fn (string $message, Instructor $instructor, string $jwt) => End::send(
         [
-            "Message" => $message,
-            "Instructor" => json_encode($instructor),
-            "JWT" => $jwt
+            "message" => $message,
+            "instructor" => $instructor,
+            "jwt" => $jwt
         ]
     );
     $error = fn ($errorMessage) => End::error($errorMessage, 401);

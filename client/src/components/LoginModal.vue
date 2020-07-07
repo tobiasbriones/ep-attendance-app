@@ -49,6 +49,9 @@
 </template>
 
 <script>
+  import AuthService from '../instructor/services/AuthService';
+  import LoginService from '../instructor/services/LoginService';
+  
   export default {
     data() {
       return {
@@ -56,8 +59,8 @@
         showStudentForm: false,
         instructorLoginTitle: 'Instructor login',
         form: {
-          email: '',
-          password: ''
+          email: 'tobiasbriones.dev@gmail.com',
+          password: 'password'
         }
       };
     },
@@ -70,9 +73,26 @@
         this.showInstructorForm = false;
         this.showStudentForm = true;
       },
-      onSubmit(e) {
+      async onSubmit(e) {
         e.preventDefault();
-        alert(JSON.stringify(this.form));
+        const formData = new FormData();
+        
+        formData.set('email', this.form.email);
+        formData.set('password', this.form.password);
+        try {
+          const response = await AuthService.login(formData);
+          const responseData = response.data;
+          const jwt = responseData['jwt'];
+          const msg = `
+            Instructor authenticated as ${ responseData['instructor']['email'] }
+          `;
+          
+          LoginService.saveInstructorLogin(jwt);
+          alert(msg);
+        }
+        catch (err) {
+          alert(err.response.data.message);
+        }
       },
       onReset(e) {
         e.preventDefault();

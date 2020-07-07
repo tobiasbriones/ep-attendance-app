@@ -107,6 +107,10 @@
     top: 16px;
   }
   
+  .gone {
+    display: none !important;
+  }
+  
   @media (min-width: 960px) {
     h1 {
       display: inline-block;
