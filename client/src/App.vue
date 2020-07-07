@@ -5,9 +5,12 @@
   -- LICENSE file in the root directory of this source tree.
   -->
 
-<template :key="appComponentKey">
+<template>
   <div id="app">
-    <app-toolbar v-bind:user-logged="userLogged" @onLogoutAction="onLogout"></app-toolbar>
+    <app-toolbar v-bind:user-logged="userLogged"
+                 @onLogoutAction="onLogout"
+                 @onSuccessfullyLogged="onSuccessfullyLogged">
+    </app-toolbar>
     <div>
       {{ instructorEmail }}
     </div>
@@ -25,26 +28,33 @@
     name: 'App',
     data() {
       return {
-        appComponentKey: 0,
         userLogged: false,
-        instructorEmail: 'A'
+        instructorEmail: ''
       };
     },
     created() {
       this.checkUserLogin();
     },
     methods: {
+      setNoUser() {
+        this.userLogged = false;
+        this.instructorEmail = '';
+      },
+      setInstructorUser(email) {
+        this.userLogged = true;
+        this.instructorEmail = email;
+      },
       async authenticateInstructor(jwt) {
         try {
           const response = await AuthService.authenticate(jwt);
           const responseData = response.data;
           const instructor = responseData['instructor'];
           
-          this.userLogged = true;
-          this.instructorEmail = instructor['email'];
+          this.setInstructorUser(instructor['email'])
         }
         catch (err) {
           alert(err.response.data.message);
+          this.setNoUser();
         }
       },
       
@@ -58,7 +68,10 @@
         
         };
         
-        if (!userType) return;
+        if (!userType) {
+          this.setNoUser();
+          return;
+        }
         switch (userType) {
           case 'instructor':
             instructor();
@@ -69,9 +82,11 @@
             break;
         }
       },
+      onSuccessfullyLogged() {
+        this.checkUserLogin();
+      },
       onLogout() {
-        // Force component re-rendering
-        this.appComponentKey++;
+        this.checkUserLogin();
       }
     },
     components: {

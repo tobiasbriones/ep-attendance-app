@@ -26,8 +26,8 @@
         </div>
       </div>
     </nav>
-    <app-login-modal></app-login-modal>
-    <b-button ref="loginModalButton" class="gone" v-b-modal.modal-1></b-button>
+    <app-login-modal @onSuccessfullyLogged="onSuccessfullyLogged"></app-login-modal>
+    <b-button ref="loginModalButton" class="gone" v-b-modal.modal-login></b-button>
   </header>
 </template>
 
@@ -48,12 +48,15 @@
       };
     },
     methods: {
-      onAccessActionClick: function() {
+      onAccessActionClick() {
         this.$refs.loginModalButton.click();
       },
-      onLogoutActionClick: function() {
+      onLogoutActionClick() {
         UserLogout.logout();
         this.$emit('onLogoutAction');
+      },
+      onSuccessfullyLogged() {
+        this.$emit('onSuccessfullyLogged');
       }
     },
     components: {

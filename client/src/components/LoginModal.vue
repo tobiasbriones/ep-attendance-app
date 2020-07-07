@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <b-modal id="modal-1" title="Access to the app" hide-footer>
+    <b-modal id="modal-login" title="Access to the app" hide-footer>
       <div id="loginOptionsPane">
         <button v-on:click="onInstructorLogin">
           INSTRUCTOR
@@ -83,12 +83,10 @@
           const response = await AuthService.login(formData);
           const responseData = response.data;
           const jwt = responseData['jwt'];
-          const msg = `
-            Instructor authenticated as ${ responseData['instructor']['email'] }
-          `;
-          
+  
           LoginService.saveInstructorLogin(jwt);
-          alert(msg);
+          this.$root.$emit('bv::hide::modal', 'modal-login');
+          this.$emit('onSuccessfullyLogged');
         }
         catch (err) {
           alert(err.response.data.message);
