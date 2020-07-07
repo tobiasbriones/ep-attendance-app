@@ -34,11 +34,12 @@
 <script>
   
   import LoginModal from './LoginModal';
+  import UserLogout from '../services/UserLogout';
   
   export default {
     name: 'Toolbar',
     props: {
-      userLogged: Boolean,
+      userLogged: Boolean
     },
     data: function() {
       return {
@@ -51,7 +52,8 @@
         this.$refs.loginModalButton.click();
       },
       onLogoutActionClick: function() {
-        // TODO
+        UserLogout.logout();
+        this.$emit('onLogoutAction');
       }
     },
     components: {

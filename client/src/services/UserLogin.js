@@ -10,6 +10,7 @@ import { getCookie, setCookie } from '../tools/Cookies';
 const USER_TYPE_CNAME = 'user-type';
 
 export default {
+  USER_TYPE_CNAME,
   setUserType(userType, expDays) {
     setCookie(USER_TYPE_CNAME, userType, expDays);
   },

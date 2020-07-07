@@ -5,9 +5,9 @@
   -- LICENSE file in the root directory of this source tree.
   -->
 
-<template>
+<template :key="appComponentKey">
   <div id="app">
-    <app-toolbar v-bind:user-logged="userLogged"></app-toolbar>
+    <app-toolbar v-bind:user-logged="userLogged" @onLogoutAction="onLogout"></app-toolbar>
     <div>
       {{ instructorEmail }}
     </div>
@@ -25,6 +25,7 @@
     name: 'App',
     data() {
       return {
+        appComponentKey: 0,
         userLogged: false,
         instructorEmail: 'A'
       };
@@ -67,6 +68,10 @@
             student();
             break;
         }
+      },
+      onLogout() {
+        // Force component re-rendering
+        this.appComponentKey++;
       }
     },
     components: {
