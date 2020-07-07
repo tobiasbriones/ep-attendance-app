@@ -15,7 +15,7 @@ class End {
      *
      * @param $response array associative array to send as a json response
      */
-    public static function send($response) {
+    public static function send(array $response) {
         http_response_code(200);
         echo json_encode($response);
     }
@@ -27,7 +27,7 @@ class End {
      * @param $response_code int HTTP response code
      * @param $about         array list of the names of the params related to this error
      */
-    public static function error($msg, $response_code, $about = []) {
+    public static function error(string $msg, int $response_code, array $about = []) {
         http_response_code($response_code);
         echo json_encode(["message" => $msg, "about" => json_encode($about)]);
     }
