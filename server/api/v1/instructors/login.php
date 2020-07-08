@@ -8,8 +8,10 @@
 
 require_once "../../../vendor/autoload.php";
 
+use App\Api\V1\ApiTools\Cors;
 use App\Api\V1\ApiTools\End;
-use App\Api\V1\Instructors\InstructorsController;
+use App\Api\V1\ApiTools\RequestMethod;
+use App\Api\V1\Instructors\LoginController;
 use App\Model\Instructor;
 
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -21,8 +23,8 @@ header("Content-Type: application/json; charset=UTF-8");
 $request_method = $_SERVER["REQUEST_METHOD"];
 $accepted_methods = ["POST"];
 
-cors($request_method);
-check_request_method($accepted_methods, $request_method);
+Cors::check($request_method);
+RequestMethod::check($accepted_methods, $request_method);
 check_input();
 process();
 
@@ -32,20 +34,6 @@ process();
  */
 
 // ------------------------------  FUNCTIONS  ------------------------------- //
-
-function cors($request_method) {
-    if ($request_method === "OPTIONS"){
-        exit;
-    }
-}
-
-function check_request_method($accepted_methods, $request_method) {
-    if (!in_array($request_method, $accepted_methods)) {
-        End::error("Invalid request. Method not Allowed.", 405);
-        exit;
-    }
-    return true;
-}
 
 function check_input() {
     $wrong = function () {
@@ -77,5 +65,5 @@ function process() {
     );
     $error = fn ($errorMessage) => End::error($errorMessage, 401);
     
-    InstructorsController::login($instructor, $password, $success, $error);
+    LoginController::login($instructor, $password, $success, $error);
 }

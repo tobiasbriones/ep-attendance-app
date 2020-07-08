@@ -8,14 +8,20 @@
 
 namespace App\Api\V1\Instructors;
 
+use App\Api\V1\ResultCode;
 use App\Config\Env;
 use App\Model\Instructor;
-use Exception;
 use Firebase\JWT\JWT;
 
 // For this app there's only one instructor with email and password hash
 // registered in the .env file
-class InstructorsController {
+class LoginController implements ResultCode {
+    
+    public const FAIL_INVALID_LOGIN_CREDENTIALS = 1;
+    private const MSG = [
+        "Instructors request handled successfully",
+        "Invalid instructor email or password",
+    ];
     
     public static function login(Instructor $instructor, string $password, callable $success, callable $error) {
         $INSTRUCTOR_EMAIL = Env::get(Env::INSTRUCTOR_EMAIL_KEY);
@@ -31,39 +37,23 @@ class InstructorsController {
         ];
         
         if ($INSTRUCTOR_EMAIL != $instructor->getEmail() || !password_verify($password, $INSTRUCTOR_PASSWORD_HASH)) {
-            $resultCode = ResultCode::FAIL_INVALID_LOGIN_CREDENTIALS;
+            $resultCode = self::FAIL_INVALID_LOGIN_CREDENTIALS;
             
-            $error(ResultCode::getMessage($resultCode));
+            $error(self::getResultMessage($resultCode));
             return;
         }
         $success(
-            ResultCode::getMessage(ResultCode::RESULT_OK),
+            self::getResultMessage(ResultCode::RESULT_OK),
             $instructor,
             JWT::encode($jwtPayload, Env::get(Env::JWT_KEY))
         );
     }
     
-    public static function authenticateJWT(string $jwt, callable $success, callable $error) {
-        $accessDenied = function () use ($error) {
-            $resultCode = ResultCode::FAIL_INVALID_AUTH_JWT;
-            
-            $error(ResultCode::getMessage($resultCode));
-        };
-        $instructor = null;
-        
-        try {
-            $decodedJWT = JWT::decode($jwt, Env::get(Env::JWT_KEY), ["HS256"]);
-            $instructor = new Instructor($decodedJWT->data->email);
+    public static function getResultMessage(int $resultCode): string {
+        if ($resultCode < 0 || $resultCode >= count(self::MSG)) {
+            return "Invalid result code. N/A";
         }
-        catch (Exception $e) {
-            $accessDenied();
-            return;
-        }
-        
-        $success(
-            ResultCode::getMessage(ResultCode::RESULT_OK),
-            $instructor
-        );
+        return self::MSG[$resultCode];
     }
     
 }
