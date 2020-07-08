@@ -20,6 +20,7 @@
   import AuthService from './user/instructor/services/AuthService';
   import UserLogin from './services/UserLogin';
   import LoginService from './user/instructor/services/LoginService';
+  import router from './routes';
   
   export default {
     name: 'App',
@@ -47,7 +48,7 @@
           const responseData = response.data;
           const instructor = responseData['instructor'];
           
-          this.setInstructorUser(instructor['email'])
+          this.setInstructorUser(instructor['email']);
         }
         catch (err) {
           alert(err.response.data.message);
@@ -81,9 +82,11 @@
       },
       onSuccessfullyLogged() {
         this.checkUserLogin();
+        router.push('instructor/dashboard');
       },
       onLogout() {
         this.checkUserLogin();
+        router.push('/');
       }
     },
     components: {

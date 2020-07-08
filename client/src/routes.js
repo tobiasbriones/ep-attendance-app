@@ -8,6 +8,7 @@
 import Home from './components/Home';
 import StudentSignIn from './components/StudentSignUp';
 import VueRouter from 'vue-router';
+import InstructorPanel from './components/InstructorPanel';
 
 const routes = [
   {
@@ -17,6 +18,10 @@ const routes = [
   {
     path: '/student/register',
     component: StudentSignIn
+  },
+  {
+    path: '/instructor/dashboard',
+    component: InstructorPanel
   }
 ];
 

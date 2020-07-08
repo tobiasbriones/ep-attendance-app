@@ -15,11 +15,15 @@ Vue.use(Vuex);
 export default new Vuex.Store(
   {
     state: {
-      studentProfile: {}
+      studentProfile: {},
+      instructorData: {}
     },
     mutations: {
       setStudentProfile(state, profile) {
         state.studentProfile = profile;
+      },
+      setInstructorData(state, data) {
+        state.instructorData = data;
       }
     },
     actions: {
@@ -47,6 +51,9 @@ export default new Vuex.Store(
                         }
                       );
         dispatch('fetchStudentProfile', user);
+      },
+      setInstructorData({ commit }, data) {
+        commit('setInstructorData', data);
       }
     }
   }
