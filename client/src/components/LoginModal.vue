@@ -133,7 +133,9 @@
           this.$emit('onSuccessfullyLogged');
         }
         catch (err) {
-          alert(err.response.data.message);
+          const msg = err.response ? err.response.data.message : err;
+          
+          alert(msg);
         }
       },
       onInstructorReset(e) {

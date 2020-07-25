@@ -7,7 +7,7 @@
 
 import Api from '../../../services/Api';
 
-const dataEndPoint = 'instructors/data.php';
+const dataEndPoint = 'instructors/instructors.php';
 
 const getURL = (jwt) =>  {
   return `${dataEndPoint}?jwt=${jwt}`;

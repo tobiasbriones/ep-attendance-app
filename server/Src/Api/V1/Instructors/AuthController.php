@@ -22,7 +22,14 @@ class AuthController implements ResultCode {
         "Invalid login credentials"
     ];
     
-    static function getInstructor(string $jwt): ?Instructor {
+    /**
+     * Returns the instructor if the jwt is valid or null otherwise.
+     *
+     * @param string $jwt instructor jwt
+     *
+     * @return Instructor|null instructor if the jwt is valid or null otherwise
+     */
+    public static function getInstructor(string $jwt): ?Instructor {
         try {
             $decodedJWT = JWT::decode($jwt, Env::get(Env::JWT_KEY), ["HS256"]);
             return new Instructor($decodedJWT->data->email);
@@ -57,4 +64,5 @@ class AuthController implements ResultCode {
         }
         return self::MSG[$resultCode];
     }
+    
 }

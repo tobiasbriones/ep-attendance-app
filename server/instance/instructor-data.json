@@ -1,9 +1,19 @@
 {
-    "name": "",
+    "profile": {
+        "email": "tobiasbriones.dev@gmail.com",
+        "name": "Calculus"
+    },
     "activeCourse": {
-        "name": "",
-        "startTime": "",
-        "endTime": "",
-        "link": ""
+        "name": "Calculus",
+        "startTime": "13:00",
+        "endTime": "14:00",
+        "link": "https:\/\/youtube.com",
+        "days": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
     }
 }

@@ -8,15 +8,17 @@
 
 namespace App\Model;
 
-// Just that for this application :D
 use JsonSerializable;
 
+// Just that for this application :D
 class Instructor implements JsonSerializable {
     
     private string $email;
+    private string $name;
     
-    public function __construct($email) {
+    public function __construct($email, $name = "-") {
         $this->email = $email;
+        $this->name = $name;
     }
     
     public function __toString(): string {
@@ -25,12 +27,30 @@ class Instructor implements JsonSerializable {
     
     public function jsonSerialize(): array {
         return [
-            "email" => $this->getEmail()
+            "email" => $this->getEmail(),
+            "name" => $this->getName()
         ];
     }
     
+    /**
+     * @return string
+     */
     public function getEmail(): string {
         return $this->email;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getName(): string {
+        return $this->name;
+    }
+    
+    public static function fromJson(string $email, array $instructorJson): Instructor {
+        return new Instructor(
+            $email,
+            $instructorJson["name"]
+        );
     }
     
 }
