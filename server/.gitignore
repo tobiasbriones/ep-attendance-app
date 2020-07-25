@@ -3,3 +3,6 @@ vendor/
 
 # ENV file
 .env
+
+# Instructor data
+storage/instructor-data.json
