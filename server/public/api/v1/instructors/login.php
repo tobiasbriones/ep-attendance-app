@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-require_once "../../../vendor/autoload.php";
+require_once "../../../../vendor/autoload.php";
 
 use App\Api\V1\ApiTools\Cors;
 use App\Api\V1\ApiTools\End;
