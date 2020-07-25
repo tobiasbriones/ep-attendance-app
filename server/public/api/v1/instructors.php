@@ -25,14 +25,11 @@ header("Content-Type: application/json; charset=UTF-8");
 
 $request_method = $_SERVER["REQUEST_METHOD"];
 $accepted_methods = ["GET", "PUT"];
-$instructorJWT = "";
 
 Cors::check($request_method);
 RequestMethod::check($accepted_methods, $request_method);
 
-if ($request_method == "PUT") {
-    $instructorJWT = AuthorizationHeader::getJWT();
-}
+$instructorJWT = AuthorizationHeader::getJWT();
 
 take_request($request_method, $instructorJWT);
 
@@ -69,19 +66,19 @@ function take_request($request_method, $instructorJWT) {
         exit;
     }
     
-    if ($request_method == "GET") {
-        InstructorsRequestController::get($success, $error);
-    }
-    else if ($request_method == "PUT") {
-        $instructor = InstructorsRequestInput::getInstructor($inputs);
-        
-        // Using callback hell middleware for now
-        AuthController::authenticateJWT(
-            $instructorJWT,
-            fn (
-                string $msg, Instructor $validated
-            ) => InstructorsRequestController::put($instructor, $success, $error),
-            fn ($errorMsg) => $errorUnauthorized($errorMsg)
-        );
-    }
+    // Using callback hell middleware for now
+    AuthController::authenticateJWT(
+        $instructorJWT,
+        function (string $msg, Instructor $validated) use ($request_method, $success, $error, $inputs) {
+            if ($request_method == "GET") {
+                InstructorsRequestController::get($success, $error);
+            }
+            else if ($request_method == "PUT") {
+                $instructor = InstructorsRequestInput::getInstructor($inputs);
+                
+                InstructorsRequestController::put($instructor, $success, $error);
+            }
+        },
+        fn ($errorMsg) => $errorUnauthorized($errorMsg)
+    );
 }
