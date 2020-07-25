@@ -22,12 +22,12 @@ class InstructorStorage {
     private const ACTIVE_COURSE_KEY = "activeCourse";
     
     private static function saveData(array $data) {
-        $file = dirname(__DIR__, 2) . "/instance/instructor-data.json";
+        $file = dirname(__DIR__, 2) . "/storage/instructor-data.json";
         file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
     }
     
     private static function loadData(): array {
-        $file = dirname(__DIR__, 2) . "/instance/instructor-data.json";
+        $file = dirname(__DIR__, 2) . "/storage/instructor-data.json";
         return json_decode(file_get_contents($file), true);
     }
     

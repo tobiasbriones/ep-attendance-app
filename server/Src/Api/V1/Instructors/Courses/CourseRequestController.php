@@ -20,7 +20,7 @@ class CourseRequestController implements ResultCode {
     ];
     
     private static function loadData(): object {
-        $file = dirname(__DIR__, 4) . "/instance/instructor-data.json";
+        $file = dirname(__DIR__, 4) . "/storage/instructor-data.json";
         $json = file_get_contents($file);
         return json_decode($json);
     }

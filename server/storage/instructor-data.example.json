@@ -1,0 +1,18 @@
+{
+  "profile": {
+    "name": "Instructor name"
+  },
+  "activeCourse": {
+    "name": "Course name",
+    "startTime": "13:00",
+    "endTime": "14:00",
+    "link": "https:\/\/youtube.com",
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  }
+}
