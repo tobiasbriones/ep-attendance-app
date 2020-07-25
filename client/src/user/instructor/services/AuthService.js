@@ -20,10 +20,13 @@ export default {
     return Api.post(loginEndPoint, data, config);
   },
   authenticate(jwt) {
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      'Authorization': `Bearer ${jwt}`
+    }
     const config = { headers: headers };
     const data = new FormData();
     
-    data.set('jwt', jwt);
     return Api.post(authEndPoint, data, config);
   }
 };

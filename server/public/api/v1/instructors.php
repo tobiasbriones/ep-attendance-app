@@ -8,6 +8,7 @@
 
 require_once "../../../vendor/autoload.php";
 
+use App\Api\V1\ApiTools\AuthorizationHeader;
 use App\Api\V1\ApiTools\Cors;
 use App\Api\V1\ApiTools\End;
 use App\Api\V1\ApiTools\RequestMethod;
@@ -26,25 +27,13 @@ $request_method = $_SERVER["REQUEST_METHOD"];
 $accepted_methods = ["GET", "PUT"];
 $instructorJWT = "";
 
-if ($request_method == "PUT") {
-    if (!isset($_SERVER["HTTP_AUTHORIZATION"])) {
-        End::error("Unauthorized", 401);
-        exit;
-    }
-    
-    // Auth header looks like: 'Bearer <jwt>'
-    $http_auth = $_SERVER["HTTP_AUTHORIZATION"];
-    $split = preg_split("/\s+/", $http_auth);
-    
-    if (!$split) {
-        End::error("Invalid authentication", 401);
-        exit;
-    }
-    $instructorJWT = $split[1];
-}
-
 Cors::check($request_method);
 RequestMethod::check($accepted_methods, $request_method);
+
+if ($request_method == "PUT") {
+    $instructorJWT = AuthorizationHeader::getJWT();
+}
+
 take_request($request_method, $instructorJWT);
 
 // ------------------------------  FUNCTIONS  ------------------------------- //

@@ -8,6 +8,7 @@
 
 require_once "../../../../vendor/autoload.php";
 
+use App\Api\V1\ApiTools\AuthorizationHeader;
 use App\Api\V1\ApiTools\Cors;
 use App\Api\V1\ApiTools\End;
 use App\Api\V1\ApiTools\RequestMethod;
@@ -25,28 +26,13 @@ $accepted_methods = ["POST"];
 
 Cors::check($request_method);
 RequestMethod::check($accepted_methods, $request_method);
-check_input();
-process();
+
+$instructorJWT = AuthorizationHeader::getJWT();
+process($instructorJWT);
 
 // ------------------------------  FUNCTIONS  ------------------------------- //
 
-function check_input() {
-    $wrong = function () {
-        $msg = "Wrong arguments or number of arguments. Check the API documentation";
-        
-        End::error($msg, 400);
-        exit;
-    };
-    
-    if (!isset($_POST["jwt"])) {
-        $wrong();
-        return false;
-    }
-    return true;
-}
-
-function process() {
-    $jwt = $_POST["jwt"];
+function process($instructorJWT) {
     $success = fn (string $message, Instructor $instructor) => End::send(
         [
             "message" => $message,
@@ -55,5 +41,5 @@ function process() {
     );
     $error = fn ($errorMessage) => End::error($errorMessage, 401);
     
-    AuthController::authenticateJWT($jwt, $success, $error);
+    AuthController::authenticateJWT($instructorJWT, $success, $error);
 }
