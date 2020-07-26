@@ -20,7 +20,6 @@ const getConfig = (jwt) => {
 export default {
   update(jwt, data) {
     const config = getConfig(jwt);
-    console.log(data);
     return Api.put(courseSetupEndPoint, data, config);
   }
 };
