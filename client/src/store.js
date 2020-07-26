@@ -26,6 +26,14 @@ export default new Vuex.Store(
         state.instructorData = data;
       }
     },
+    getters: {
+      studentProfile: state => {
+        return state.studentProfile;
+      },
+      instructorData: state => {
+        return state.instructorData;
+      }
+    },
     actions: {
       async fetchStudentProfile({ commit }, user) {
         const userProfile = await firebase.usersCollection.doc(user.uid).get();

@@ -9,6 +9,8 @@
   <div>
     <app-course-setup-pane @onUpdateCourse="onUpdateCourse">
     </app-course-setup-pane>
+    <app-profile-pane @onUpdateProfile="onUpdateProfile">
+    </app-profile-pane>
   </div>
 </template>
 
@@ -18,35 +20,49 @@
   import CourseSetupPane from './instructor/CourseSetupPane';
   import router from '../routes';
   import CourseSetupService from '../user/instructor/services/CourseSetupService';
+  import ProfilePane from './instructor/ProfilePane';
   
   export default {
     name: 'InstructorPanel',
     data() {
-      return {
-        user: ''
-      };
+      return {};
     },
     async created() {
-      try {
-        const jwt = await LoginService.loadInstructorJWT();
-        const response = await ProfileService.retrieve(jwt);
-        const instructorData = response.data['data'];
-        
-        await this.$store.dispatch('setInstructorData', instructorData);
-      }
-      catch (err) {
-        await router.push('/');
-        alert(err);
-      }
-      
+      await this.loadInstructor();
     },
     methods: {
+      async loadInstructor() {
+        try {
+          const jwt = await LoginService.loadInstructorJWT();
+          const response = await ProfileService.retrieve(jwt);
+          const instructorData = response.data['data'];
+          
+          await this.$store.dispatch('setInstructorData', instructorData);
+        }
+        catch (err) {
+          await router.push('/');
+          alert(err);
+        }
+      },
+      async onUpdateProfile(data) {
+        try {
+          const jwt = await LoginService.loadInstructorJWT();
+          
+          await ProfileService.update(jwt, data);
+          await this.loadInstructor();
+          alert('Profile updated successfully');
+        }
+        catch (err) {
+          alert(err);
+        }
+      },
       async onUpdateCourse(data) {
         try {
           const jwt = await LoginService.loadInstructorJWT();
           
           await CourseSetupService.update(jwt, data);
-          alert('Updated successfully');
+          await this.loadInstructor();
+          alert('Course updated successfully');
         }
         catch (err) {
           alert(err);
@@ -54,7 +70,12 @@
       }
     },
     components: {
+      'app-profile-pane': ProfilePane,
       'app-course-setup-pane': CourseSetupPane
     }
   };
 </script>
+
+<style scoped>
+
+</style>

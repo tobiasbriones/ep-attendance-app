@@ -12,13 +12,16 @@ const profileEndPoint = 'instructors.php';
 const getConfig = (jwt) => {
   return {
     headers: {
-      'Authorization': `Bearer ${jwt}`
+      'Authorization': `Bearer ${ jwt }`
     }
   };
 };
 
 export default {
+  async update(jwt, data) {
+    await Api.put(profileEndPoint, data, getConfig(jwt));
+  },
   retrieve(jwt) {
     return Api.get(profileEndPoint, getConfig(jwt));
-  },
+  }
 };
