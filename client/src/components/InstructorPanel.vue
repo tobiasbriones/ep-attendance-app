@@ -19,7 +19,7 @@
   import ProfileService from '../user/instructor/services/ProfileService';
   import CourseSetupPane from './instructor/CourseSetupPane';
   import router from '../routes';
-  import CourseSetupService from '../user/instructor/services/CourseSetupService';
+  import CourseSetupService from '../user/instructor/services/CourseService';
   import ProfilePane from './instructor/ProfilePane';
   
   export default {
@@ -29,6 +29,7 @@
     },
     async created() {
       await this.loadInstructor();
+      await this.loadCourse();
     },
     methods: {
       async loadInstructor() {
@@ -41,6 +42,14 @@
         }
         catch (err) {
           await router.push('/');
+          alert(err);
+        }
+      },
+      async loadCourse() {
+        try {
+          await this.$store.dispatch('loadCourse');
+        }
+        catch (err) {
           alert(err);
         }
       },
@@ -61,7 +70,7 @@
           const jwt = await LoginService.loadInstructorJWT();
           
           await CourseSetupService.update(jwt, data);
-          await this.loadInstructor();
+          await this.loadCourse();
           alert('Course updated successfully');
         }
         catch (err) {

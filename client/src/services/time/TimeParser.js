@@ -22,6 +22,18 @@ const fromString = (timeStr) => {
   return createTime(hours, minutes);
 };
 
+const fromTimeStrToMinutes = (startTime, endTime) => {
+  const getHours = timeStr => {
+    return parseInt(timeStr.substring(0, 2));
+  };
+  const getMinutes = timeStr => {
+    return parseInt(timeStr.substring(3, 5));
+  };
+  const startTimeMinutes = getHours(startTime) * 60 + getMinutes(startTime);
+  const endTimeMinutes = getHours(endTime) * 60 + getMinutes(endTime);
+  return endTimeMinutes - startTimeMinutes;
+};
+
 const sum = (timeA, timeB) => {
   const hours = timeA.hours + timeB.hours;
   const minutes = timeA.minutes + timeB.minutes;
@@ -86,5 +98,6 @@ const normalize = (hours, minutes) => {
 export default {
   createTime,
   fromString,
+  fromTimeStrToMinutes,
   sum
 };

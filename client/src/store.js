@@ -9,6 +9,7 @@ import Vuex from 'vuex';
 import Vue from 'vue';
 import * as firebase from './firebase';
 import router from './routes';
+import CourseService from './user/instructor/services/CourseService';
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store(
   {
     state: {
       studentProfile: {},
-      instructorData: {}
+      instructorData: {},
+      course: {}
     },
     mutations: {
       setStudentProfile(state, profile) {
@@ -24,6 +26,9 @@ export default new Vuex.Store(
       },
       setInstructorData(state, data) {
         state.instructorData = data;
+      },
+      setCourse(state, course) {
+        state.course = course;
       }
     },
     getters: {
@@ -32,6 +37,9 @@ export default new Vuex.Store(
       },
       instructorData: state => {
         return state.instructorData;
+      },
+      course: state => {
+        return state.course;
       }
     },
     actions: {
@@ -59,6 +67,10 @@ export default new Vuex.Store(
                         }
                       );
         dispatch('fetchStudentProfile', user);
+      },
+      async loadCourse({ commit }) {
+        const course = await CourseService.read();
+        commit('setCourse', course);
       },
       setInstructorData({ commit }, data) {
         commit('setInstructorData', data);

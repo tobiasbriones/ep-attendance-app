@@ -17,7 +17,7 @@
       description="Course name to create and allow students to participate">
       <b-form-input
         id="input-course-name"
-        v-model="data.name"
+        v-model="form.name"
         type="text"
         required
         placeholder="Enter the course name">
@@ -29,7 +29,7 @@
                   label-for="input-start-time"
                   description="Start time to allow students to go live">
       <b-form-timepicker id="input-start-time"
-                         v-model="data.startTime"
+                         v-model="form.startTime"
                          locale="en">
       </b-form-timepicker>
     </b-form-group>
@@ -40,7 +40,7 @@
                   description="Course duration in minutes to end the live session">
       <b-form-input
         id="input-duration"
-        v-model="data.durationMin"
+        v-model="form.durationMin"
         type="number"
         required
         placeholder="Enter the course duration in minutes">
@@ -53,7 +53,7 @@
                   description="Meeting link to allow connections at the specified time">
       <b-form-input
         id="input-link"
-        v-model="data.link"
+        v-model="form.link"
         type="text"
         required
         placeholder="Enter the YouTube live video link">
@@ -63,7 +63,7 @@
     <div>
       <b-form-checkbox
         id="checkbox-1"
-        v-model="data.days.monday"
+        v-model="form.days.monday"
         name="checkbox-1"
         value="true"
         unchecked-value="false">
@@ -71,7 +71,7 @@
       </b-form-checkbox>
       <b-form-checkbox
         id="checkbox-2"
-        v-model="data.days.tuesday"
+        v-model="form.days.tuesday"
         name="checkbox-2"
         value="true"
         unchecked-value="false">
@@ -79,7 +79,7 @@
       </b-form-checkbox>
       <b-form-checkbox
         id="checkbox-3"
-        v-model="data.days.wednesday"
+        v-model="form.days.wednesday"
         name="checkbox-3"
         value="true"
         unchecked-value="false">
@@ -87,7 +87,7 @@
       </b-form-checkbox>
       <b-form-checkbox
         id="checkbox-4"
-        v-model="data.days.thursday"
+        v-model="form.days.thursday"
         name="checkbox-4"
         value="true"
         unchecked-value="false">
@@ -95,7 +95,7 @@
       </b-form-checkbox>
       <b-form-checkbox
         id="checkbox-5"
-        v-model="data.days.friday"
+        v-model="form.days.friday"
         name="checkbox-5"
         value="true"
         unchecked-value="false">
@@ -103,7 +103,7 @@
       </b-form-checkbox>
       <b-form-checkbox
         id="checkbox-6"
-        v-model="data.days.saturday"
+        v-model="form.days.saturday"
         name="checkbox-6"
         value="true"
         unchecked-value="false">
@@ -111,7 +111,7 @@
       </b-form-checkbox>
       <b-form-checkbox
         id="checkbox-7"
-        v-model="data.days.sunday"
+        v-model="form.days.sunday"
         name="checkbox-7"
         value="true"
         unchecked-value="false">
@@ -131,7 +131,7 @@
     name: 'CourseSetupPane',
     data() {
       return {
-        data: {
+        form: {
           name: '',
           startTime: '07:00:00',
           durationMin: 60,
@@ -148,13 +148,36 @@
         }
       };
     },
+    created() {
+      const getters = this.$store.getters;
+      
+      this.$store.watch(() => getters.course.course, async (newCourse) => {
+        this.reset(newCourse);
+      });
+    },
     methods: {
+      reset(course) {
+        const hasDay = (days, day) => days.includes(day) ? 'true' : 'false';
+        const days = course.days;
+        
+        this.form.name = course.name;
+        this.form.startTime = course.startTime;
+        this.form.durationMin = TimeParser.fromTimeStrToMinutes(course.startTime, course.endTime);
+        this.form.link = course.link;
+        this.form.days.monday = hasDay(days, 1);
+        this.form.days.tuesday = hasDay(days, 2);
+        this.form.days.wednesday = hasDay(days, 3);
+        this.form.days.thursday = hasDay(days, 4);
+        this.form.days.friday = hasDay(days, 5);
+        this.form.days.saturday = hasDay(days, 6);
+        this.form.days.sunday = hasDay(days, 7);
+      },
       getDays() {
         const days = [];
         let i = 1;
         
-        for (const [key] of Object.entries(this.data.days)) {
-          if (this.data.days[key] === 'true') {
+        for (const [key] of Object.entries(this.form.days)) {
+          if (this.form.days[key] === 'true') {
             days.push(i);
           }
           i++;
@@ -163,23 +186,22 @@
       },
       onSubmit(e) {
         e.preventDefault();
-        const startTime = TimeParser.fromString(this.data.startTime);
-        const durationTime = TimeParser.createTime(0, this.data.durationMin);
+        const startTime = TimeParser.fromString(this.form.startTime);
+        const durationTime = TimeParser.createTime(0, this.form.durationMin);
         const endTime = TimeParser.sum(startTime, durationTime).toString();
         const data = {
-          name: this.data.name,
-          startTime: this.data.startTime,
+          name: this.form.name,
+          startTime: this.form.startTime,
           endTime: endTime,
-          link: this.data.link,
+          link: this.form.link,
           days: this.getDays()
         };
         this.$emit('onUpdateCourse', data);
       },
-      onReset() {
-        this.data.name = '';
-        this.data.startTime = '07:00:00';
-        this.data.durationMin = 60;
-        this.data.link = '';
+      onReset(e) {
+        e.preventDefault();
+        const course = this.$store.getters.course.course;
+        this.reset(course);
       }
     }
   };
