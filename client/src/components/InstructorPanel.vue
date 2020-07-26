@@ -6,11 +6,13 @@
   -->
 
 <template>
-  <div>
-    <app-course-setup-pane @onUpdateCourse="onUpdateCourse">
-    </app-course-setup-pane>
-    <app-profile-pane @onUpdateProfile="onUpdateProfile">
-    </app-profile-pane>
+  <div class="component">
+    <div class="settings">
+      <app-profile-pane class="profile" @onUpdateProfile="onUpdateProfile">
+      </app-profile-pane>
+      <app-course-setup-pane class="course" @onUpdateCourse="onUpdateCourse">
+      </app-course-setup-pane>
+    </div>
   </div>
 </template>
 
@@ -86,5 +88,41 @@
 </script>
 
 <style scoped>
-
+  .settings {
+    width: 100%;
+  }
+  
+  .settings > form {
+    display: block;
+    width: 100%;
+  }
+  
+  @media (min-width: 600px) {
+    .settings {
+      display: flex;
+    }
+    
+    .settings > form {
+      width: 60%;
+      justify-self: center;
+    }
+  }
+  
+  @media (min-width: 960px) {
+    .component {
+      padding: 0 128px;
+    }
+  }
+  
+  @media (min-width: 1360px) {
+    .component {
+      padding: 0 20%;
+    }
+  }
+  
+  @media (min-width: 1920px) {
+    .component {
+      padding: 0 25%;
+    }
+  }
 </style>

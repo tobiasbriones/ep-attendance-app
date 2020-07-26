@@ -6,7 +6,7 @@
   -->
 
 <template>
-  <b-form id="course-setup-form" @submit="onSubmit" @reset="onReset">
+  <b-form @submit="onSubmit" @reset="onReset">
     <p>
       Setup your course
     </p>
@@ -60,7 +60,7 @@
       </b-form-input>
     </b-form-group>
     
-    <div>
+    <div class="days">
       <b-form-checkbox
         id="checkbox-1"
         v-model="form.days.monday"
@@ -208,36 +208,40 @@
 </script>
 
 <style scoped>
-  #course-setup-form {
-    display: block;
-    width: 100%;
+  form {
     padding: 48px;
   }
   
-  #course-setup-form > p {
+  form > p {
     text-align: center;
     font-weight: bold;
   }
   
-  #course-setup-form button[type=submit] {
+  form button[type=submit] {
     width: 50%;
   }
   
-  #course-setup-form button[type=reset] {
+  form button[type=reset] {
     width: 40%;
     float: right;
   }
   
-  @media (min-width: 600px) {
-    #course-setup-form {
-      width: 60%;
-    }
+  .days {
+    margin-bottom: 16px;
+  }
+  
+  .days > div {
+    display: inline-block;
+    width: 128px;
   }
   
   @media (min-width: 1360px) {
-    #course-setup-form {
-      width: 40%;
+    form {
       padding: 64px;
+    }
+    
+    .days {
+      margin-bottom: 32px;
     }
   }
 </style>

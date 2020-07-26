@@ -6,9 +6,8 @@
   -->
 
 <template>
-  <div id="profile-form">
-    <p>Instructor profile</p>
     <b-form @submit="onSubmit" @reset="onReset">
+      <p>Instructor profile</p>
       <b-form-group
         id="input-group-name"
         label="Name:"
@@ -26,7 +25,6 @@
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
-  </div>
 </template>
 
 <script>
@@ -62,20 +60,20 @@
 </script>
 
 <style scoped>
-  #profile-form {
+  form {
     padding: 48px;
   }
-  
-  #profile-form > p {
+
+  form > p {
     text-align: center;
     font-weight: bold;
   }
-  
-  #profile-form button[type=submit] {
+
+  form button[type=submit] {
     width: 50%;
   }
-  
-  #profile-form button[type=reset] {
+
+  form button[type=reset] {
     width: 40%;
     float: right;
   }
