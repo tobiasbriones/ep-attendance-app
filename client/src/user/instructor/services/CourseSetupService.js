@@ -9,17 +9,18 @@ import Api from '../../../services/Api';
 
 const courseSetupEndPoint = 'instructors/courses.php';
 
-const getHeaders = (jwt) => {
+const getConfig = (jwt) => {
   return {
     headers: {
-      authorization: jwt
+      'Authorization': `Bearer ${jwt}`
     }
   };
 };
 
 export default {
   update(jwt, data) {
-    const headers = getHeaders(jwt);
-    return Api.put(courseSetupEndPoint, data, headers);
+    const config = getConfig(jwt);
+    console.log(data);
+    return Api.put(courseSetupEndPoint, data, config);
   }
 };

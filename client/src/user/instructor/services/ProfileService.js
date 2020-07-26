@@ -7,18 +7,18 @@
 
 import Api from '../../../services/Api';
 
-const profileEndPoint = 'instructors/instructors.php';
+const profileEndPoint = 'instructors.php';
 
-const getHeaders = (jwt) => {
+const getConfig = (jwt) => {
   return {
     headers: {
-      authorization: jwt
+      'Authorization': `Bearer ${jwt}`
     }
   };
 };
 
 export default {
   retrieve(jwt) {
-    return Api.get(profileEndPoint, getHeaders(jwt));
+    return Api.get(profileEndPoint, getConfig(jwt));
   },
 };

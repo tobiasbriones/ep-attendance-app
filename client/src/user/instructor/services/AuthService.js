@@ -9,12 +9,12 @@ import Api from '../../../services/Api';
 
 const loginEndPoint = 'instructors/login.php';
 const authEndPoint = 'instructors/auth.php';
-const headers = {
-  'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-};
 
 export default {
   login(data) {
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+    };
     const config = { headers: headers };
     
     return Api.post(loginEndPoint, data, config);
@@ -22,8 +22,8 @@ export default {
   authenticate(jwt) {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      'Authorization': `Bearer ${jwt}`
-    }
+      'Authorization': `Bearer ${ jwt }`
+    };
     const config = { headers: headers };
     const data = new FormData();
     

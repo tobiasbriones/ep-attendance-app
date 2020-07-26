@@ -17,7 +17,7 @@
       description="Course name to create and allow students to participate">
       <b-form-input
         id="input-course-name"
-        v-model="data.courseName"
+        v-model="data.name"
         type="text"
         required
         placeholder="Enter the course name">
@@ -60,31 +60,123 @@
       </b-form-input>
     </b-form-group>
     
+    <div>
+      <b-form-checkbox
+        id="checkbox-1"
+        v-model="data.days.monday"
+        name="checkbox-1"
+        value="true"
+        unchecked-value="false">
+        Monday
+      </b-form-checkbox>
+      <b-form-checkbox
+        id="checkbox-2"
+        v-model="data.days.tuesday"
+        name="checkbox-2"
+        value="true"
+        unchecked-value="false">
+        Tuesday
+      </b-form-checkbox>
+      <b-form-checkbox
+        id="checkbox-3"
+        v-model="data.days.wednesday"
+        name="checkbox-3"
+        value="true"
+        unchecked-value="false">
+        Wednesday
+      </b-form-checkbox>
+      <b-form-checkbox
+        id="checkbox-4"
+        v-model="data.days.thursday"
+        name="checkbox-4"
+        value="true"
+        unchecked-value="false">
+        Thursday
+      </b-form-checkbox>
+      <b-form-checkbox
+        id="checkbox-5"
+        v-model="data.days.friday"
+        name="checkbox-5"
+        value="true"
+        unchecked-value="false">
+        Friday
+      </b-form-checkbox>
+      <b-form-checkbox
+        id="checkbox-6"
+        v-model="data.days.saturday"
+        name="checkbox-6"
+        value="true"
+        unchecked-value="false">
+        Saturday
+      </b-form-checkbox>
+      <b-form-checkbox
+        id="checkbox-7"
+        v-model="data.days.sunday"
+        name="checkbox-7"
+        value="true"
+        unchecked-value="false">
+        Sunday
+      </b-form-checkbox>
+    </div>
+    
     <b-button type="submit" variant="primary">Submit</b-button>
     <b-button type="reset" variant="danger">Reset</b-button>
   </b-form>
 </template>
 
 <script>
+  import TimeParser from '../../services/time/TimeParser';
+  
   export default {
     name: 'CourseSetupPane',
     data() {
       return {
         data: {
-          courseName: '',
+          name: '',
           startTime: '07:00:00',
           durationMin: 60,
-          link: ''
+          link: '',
+          days: {
+            monday: 'true',
+            tuesday: 'true',
+            wednesday: 'true',
+            thursday: 'true',
+            friday: 'true',
+            saturday: 'false',
+            sunday: 'false'
+          }
         }
       };
     },
     methods: {
+      getDays() {
+        const days = [];
+        let i = 1;
+        
+        for (const [key] of Object.entries(this.data.days)) {
+          if (this.data.days[key] === 'true') {
+            days.push(i);
+          }
+          i++;
+        }
+        return days;
+      },
       onSubmit(e) {
         e.preventDefault();
-        this.$emit('onUpdateCourse', this.data);
+        const startTime = TimeParser.fromString(this.data.startTime);
+        const durationTime = TimeParser.createTime(0, this.data.durationMin);
+        const endTime = TimeParser.sum(startTime, durationTime).toString();
+        const data = {
+          name: this.data.name,
+          startTime: this.data.startTime,
+          endTime: endTime,
+          link: this.data.link,
+          days: this.getDays()
+        };
+        this.$emit('onUpdateCourse', data);
       },
       onReset() {
-        this.data.courseName = '';
+        this.data.name = '';
         this.data.startTime = '07:00:00';
         this.data.durationMin = 60;
         this.data.link = '';
